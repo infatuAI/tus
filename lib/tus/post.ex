@@ -12,7 +12,7 @@ defmodule Tus.Post do
          :ok <- config.on_begin_upload.(file) do
       conn
       |> put_resp_header("tus-resumable", config.version)
-      |> put_resp_header("location", file.uid)
+      |> put_resp_header("location", conn.request_path <> file.uid)
       |> resp(:created, "")
     else
       :too_large ->
@@ -36,7 +36,7 @@ defmodule Tus.Post do
       if metadata_src do
         parse_metadata(metadata_src)
       else
-        nil
+        %{}
       end
 
     file = %Tus.File{
@@ -54,6 +54,7 @@ defmodule Tus.Post do
     metadata_src
     |> String.split(~r/\s*,\s*/)
     |> Enum.map(&split_metadata/1)
+    |> Map.new()
   end
 
   defp split_metadata(kv) do
