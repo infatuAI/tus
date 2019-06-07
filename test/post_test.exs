@@ -11,8 +11,10 @@ defmodule Tus.PostTest do
     %{config: get_config()}
   end
 
-  test "`HTTP 413 Request Entity Too Large` if upload larger than the hard config limit", context do
+  test "`HTTP 413 Request Entity Too Large` if upload larger than the hard config limit",
+       context do
     config = context[:config]
+
     conn =
       test_conn(:post, %Plug.Conn{
         req_headers: [
@@ -43,6 +45,7 @@ defmodule Tus.PostTest do
 
   test "hard config limit override the `Tus-Max-Size` soft limit", context do
     config = context[:config]
+
     conn =
       test_conn(:post, %Plug.Conn{
         req_headers: [
@@ -88,10 +91,10 @@ defmodule Tus.PostTest do
   test "parse metadata" do
     metadata_src = "filename d29ybGRfZG9taW5hdGlvbl9wbGFuLnBkZg==,username YnJhaW4="
 
-    expected = [
-      {"filename", "world_domination_plan.pdf"},
-      {"username", "brain"}
-    ]
+    expected = %{
+      "filename" => "world_domination_plan.pdf",
+      "username" => "brain"
+    }
 
     assert Tus.Post.parse_metadata(metadata_src) == expected
   end
@@ -99,10 +102,10 @@ defmodule Tus.PostTest do
   test "parse metadata with invalid spaces" do
     metadata_src = "filename  d29ybGRfZG9taW5hdGlvbl9wbGFuLnBkZg== , username YnJhaW4="
 
-    expected = [
-      {"filename", "world_domination_plan.pdf"},
-      {"username", "brain"}
-    ]
+    expected = %{
+      "filename" => "world_domination_plan.pdf",
+      "username" => "brain"
+    }
 
     assert Tus.Post.parse_metadata(metadata_src) == expected
   end
@@ -128,10 +131,10 @@ defmodule Tus.PostTest do
 
     file = config.cache.get(config.cache_name, uid)
 
-    expected = [
-      {"filename", "world_domination_plan.pdf"},
-      {"username", "brain"}
-    ]
+    expected = %{
+      "filename" => "world_domination_plan.pdf",
+      "username" => "brain"
+    }
 
     assert file
     assert file.metadata_src == metadata_src
@@ -142,6 +145,7 @@ defmodule Tus.PostTest do
 
   test "on_begin_upload called", context do
     config = context[:config]
+
     TestController.post(
       test_conn(:post, %Plug.Conn{
         req_headers: [
