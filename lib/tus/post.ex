@@ -54,6 +54,7 @@ defmodule Tus.Post do
     metadata_src
     |> String.split(~r/\s*,\s*/)
     |> Enum.map(&split_metadata/1)
+    |> Map.new()
   end
 
   defp split_metadata(kv) do
