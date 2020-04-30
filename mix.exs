@@ -45,7 +45,7 @@ defmodule Tus.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:plug, "~> 1.3"},
+      {:plug, "~> 1.10"},
       {:uuid, "~> 1.1"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
